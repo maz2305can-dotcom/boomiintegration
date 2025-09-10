@@ -1,0 +1,30 @@
+<SSC>
+<User>
+<Name>DEMO_USER</Name>
+</User>
+<ERPContext>
+<BusinessUnit>XYZ01</BusinessUnit>
+<BudgetCode>A</BudgetCode>
+</ERPContext>
+<MethodContext>
+<LedgerPostingParameters>
+<Description>Sample ERP Invoice</Description>
+<JournalType>APGEN</JournalType>
+<PostingType>2</PostingType>
+</LedgerPostingParameters>
+</MethodContext>
+<Payload>
+<Ledger>
+<Line status="success">
+<JournalLineNumber>1</JournalLineNumber>
+<JournalNumber>123456</JournalNumber>
+<Amount>250.00</Amount>
+</Line>
+<Line status="success">
+<JournalLineNumber>2</JournalLineNumber>
+<JournalNumber>123456</JournalNumber>
+<Amount>125.00</Amount>
+</Line>
+</Ledger>
+</Payload>
+</SSC>
