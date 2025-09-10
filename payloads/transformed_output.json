@@ -1,0 +1,19 @@
+{
+"journal_number": "123456",
+"lines": [
+{
+"line_number": 1,
+"amount": 250.00,
+"status": "success"
+},
+{
+"line_number": 2,
+"amount": 125.00,
+"status": "success"
+}
+],
+"description": "Sample ERP Invoice",
+"posting_type": "2",
+"status": "OK",
+"message": "Invoice 123456 posted successfully"
+}
