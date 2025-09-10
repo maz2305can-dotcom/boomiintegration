@@ -1,0 +1,108 @@
+# Boomi Integrations Demo
+
+## XML → JSON Mapping Example
+
+This document explains how the **ERP request/response XML payloads** are transformed into the final JSON structure used by downstream systems. All examples are anonymized.
+
+---
+
+### 📂 Source Files
+- **`payloads/erp_request_sample.xml`** → Sample ERP request
+- **`payloads/erp_response_sample.xml`** → Sample ERP response
+- **`payloads/transformed_output.json`** → Final transformed JSON output
+
+---
+
+### 🗂 XML Input (Request + Response)
+```xml
+<ERP>
+    <User>
+        <Name>DEMO_USER</Name>
+    </User>
+    <ERPContext>
+        <BusinessUnit>XYZ01</BusinessUnit>
+        <BudgetCode>A</BudgetCode>
+    </ERPContext>
+    <MethodContext>
+        <LedgerPostingParameters>
+            <Description>Sample ERP Invoice</Description>
+            <JournalType>APGEN</JournalType>
+            <PostingType>2</PostingType>
+        </LedgerPostingParameters>
+    </MethodContext>
+    <Payload>
+        <Ledger>
+            <Line status="success">
+                <JournalLineNumber>1</JournalLineNumber>
+                <JournalNumber>123456</JournalNumber>
+                <Amount>250.00</Amount>
+            </Line>
+            <Line status="success">
+                <JournalLineNumber>2</JournalLineNumber>
+                <JournalNumber>123456</JournalNumber>
+                <Amount>125.00</Amount>
+            </Line>
+        </Ledger>
+    </Payload>
+</ERP>
+
+<Response>
+    <Status>OK</Status>
+    <Message>Invoice 123456 posted successfully</Message>
+    <Timestamp>2025-09-09T12:00:00Z</Timestamp>
+</Response>
+```
+
+---
+
+### 🗂 JSON Output
+```json
+{
+  "journal_number": "123456",
+  "lines": [
+    {
+      "line_number": 1,
+      "amount": 250.00,
+      "status": "success"
+    },
+    {
+      "line_number": 2,
+      "amount": 125.00,
+      "status": "success"
+    }
+  ],
+  "description": "Sample ERP Invoice",
+  "posting_type": "2",
+  "status": "OK",
+  "message": "Invoice 123456 posted successfully"
+}
+```
+
+---
+
+### 🔄 Mapping Details
+
+| XML Path                                         | JSON Field       | Notes |
+|--------------------------------------------------|-----------------|-------|
+| `/ERP/MethodContext/LedgerPostingParameters/Description` | `description`   | Copied directly |
+| `/ERP/MethodContext/LedgerPostingParameters/PostingType` | `posting_type`  | Copied directly |
+| `/ERP/Payload/Ledger/Line/JournalNumber`         | `journal_number` | All lines share the same journal number, captured once |
+| `/ERP/Payload/Ledger/Line/JournalLineNumber`     | `lines[].line_number` | Array of lines |
+| `/ERP/Payload/Ledger/Line/Amount`                | `lines[].amount` | Decimal conversion |
+| `/ERP/Payload/Ledger/Line/@status`               | `lines[].status` | Attribute mapping |
+| `/Response/Status`                               | `status`         | Response status |
+| `/Response/Message`                              | `message`        | Human-readable message |
+
+---
+
+### 📝 Notes
+- This mapping follows a **typical Boomi process**: Profile → Mapping → JSON Profile.
+- Journal number is deduplicated from line-level XML and promoted to the JSON root.
+- Arrays (`lines[]`) are generated from repeating `<Line>` elements.
+- Response status and message are merged into the final JSON for completeness.
+
+---
+
+👤 Author: Marcus Eberhardt  
+📧 maz2305@me.com  
+🔗 [LinkedIn](https://linkedin.com/in/marcus-eberhardt-1401886)
